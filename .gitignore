@@ -1,0 +1,28 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment directory
+venv/
+
+# VS Code
+.vscode/
+
+# Windows system files
+Thumbs.db
+
+# Scrapy files
+.scrapy/
+
+# Log files
+*.log
+
+# Coverage and test-related files
+.coverage
+nosetests.xml
+coverage.xml
+*.cover
+
+# Pytest and other test-related artifacts
+.pytest_cache/
