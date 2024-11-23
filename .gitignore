@@ -14,6 +14,7 @@ Thumbs.db
 
 # Scrapy files
 .scrapy/
+.oferty_pracy.csv
 
 # Log files
 *.log
@@ -26,3 +27,4 @@ coverage.xml
 
 # Pytest and other test-related artifacts
 .pytest_cache/
+
