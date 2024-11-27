@@ -1,0 +1,10 @@
+{
+    "filters": {
+      "city": ["Warszawa"],           
+      "experience": ["Mid"],         
+      "type_of_work": ["Full-time"], 
+      "employment_type": ["Permanent"], 
+      "keywords": ["C++"]      
+    }
+  }
+  
