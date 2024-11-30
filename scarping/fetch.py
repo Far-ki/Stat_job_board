@@ -79,7 +79,7 @@ try:
                 "employment_type": Employment_type,
                 "operating_mode": Operating_mode,
                 "url": current_url,  
-                "description": description
+                "description": description # Disappeared desc
 
             }
             data.append(oferta)
