@@ -1,13 +1,15 @@
 import pandas as pd
 import json
+import spacy
+from rapidfuzz import fuzz
 
+
+nlp = spacy.load('pl_core_news_sm') 
 
 with open('config.json', 'r', encoding='utf-8') as file:
     config = json.load(file)
 
-
 data = pd.read_csv('oferty_pracy.csv')
-
 
 filters = config['filters']
 
@@ -36,9 +38,33 @@ if 'employment_type' in filters and filters['employment_type']:
     else:
         data = data[data['employment_type'] == filters['employment_type']]
 
+
 if 'keywords' in filters and filters['keywords']:
-    keywords = "|".join(filters['keywords'])
-    data = data[data['description'].str.contains(keywords, case=False, na=False)]
+    keywords = filters['keywords']
+
+
+    lemmatized_keywords = []
+    for keyword in keywords:
+        doc = nlp(keyword.lower())
+        lemmatized_keyword = ' '.join([token.lemma_ for token in doc])
+        lemmatized_keywords.append(lemmatized_keyword)
+
+
+    def lemmatize_description(text):
+        doc = nlp(str(text).lower())
+        return ' '.join([token.lemma_ for token in doc])
+
+    data['lemmatized_description'] = data['description'].apply(lemmatize_description)
+
+
+    def fuzzy_match(description):
+        for keyword in lemmatized_keywords:
+            score = fuzz.partial_ratio(keyword, description)
+            if score >= 80: 
+                return True
+        return False
+
+    data = data[data['lemmatized_description'].apply(fuzzy_match)]
 
 
 data.to_csv('oferty_filtered.csv', index=False, encoding='utf-8')

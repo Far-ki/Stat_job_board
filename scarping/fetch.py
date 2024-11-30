@@ -12,6 +12,7 @@ import csv
 
 chromedriver_autoinstaller.install()
 
+
 chrome_options = Options()
 chrome_options.binary_location = "C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
 chrome_options.add_argument("--log-level=3")
@@ -46,6 +47,9 @@ try:
             action.move_to_element_with_offset(element, 0, 50).click().perform()
             time.sleep(random.uniform(1.5, 3.5))
 
+
+            current_url = driver.current_url
+
             try:
                 Title = driver.find_element(By.CSS_SELECTOR, "h1").text
                 City = driver.find_element(By.CLASS_NAME, "css-1o4wo1x").text
@@ -54,7 +58,7 @@ try:
                 Employment_type = driver.find_element(By.XPATH, "//*[@id='__next']/div[2]/div/div[1]/div/div[2]/div[2]/div[2]/div[3]/div[2]/div[2]").text
                 Operating_mode = driver.find_element(By.XPATH, "//*[@id='__next']/div[2]/div/div[1]/div/div[2]/div[2]/div[2]/div[4]/div[2]/div[2]").text
                 description_elements = driver.find_elements(By.XPATH, "//div[@class='MuiBox-root css-tbycqp']//ul//li")
-                description = " ".join([desc.text for desc in description_elements]) 
+                description = " ".join([desc.text for desc in description_elements])
 
             except Exception as e:
                 print(f"Nie odnaleziono wszystkich elementów oferty: {e}")
@@ -64,7 +68,7 @@ try:
                 Experience = "Brak doświadczenia"
                 Employment_type = "Brak danych o rodzaju zatrudnienia"
                 Operating_mode = "Brak typu pracy"
-                description = "Brak opisu" 
+                description = "Brak opisu"
 
             oferta = {
                 "id": if_offer,
@@ -74,7 +78,9 @@ try:
                 "experience": Experience,
                 "employment_type": Employment_type,
                 "operating_mode": Operating_mode,
-                "description": description 
+                "url": current_url,  
+                "description": description
+
             }
             data.append(oferta)
             if_offer += 1
@@ -93,7 +99,6 @@ try:
         except Exception as e:
             print(f"Nie znaleziono elementu data-index={current_index}. Przewijanie w dół...")
 
-
             driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
             time.sleep(3)
             print(data)
@@ -101,7 +106,7 @@ try:
             if current_index == last_index:
 
                 with open('oferty_pracy.csv', mode='w', newline='', encoding='utf-8') as plik:
-                    naglowki = ["id", "title", "city", "type_of_work", "experience", "employment_type", "operating_mode", "description"]
+                    naglowki = ["id", "title", "city", "type_of_work", "experience", "employment_type", "operating_mode", "description", "url"]
                     writer = csv.DictWriter(plik, fieldnames=naglowki)
                     writer.writeheader()
                     writer.writerows(data)
@@ -111,7 +116,7 @@ try:
 except Exception as e:
     print("Wystąpił błąd główny:", e)
     with open('oferty_pracy.csv', mode='w', newline='', encoding='utf-8') as plik:
-        naglowki = ["id", "title", "city", "type_of_work", "experience", "employment_type", "operating_mode", "description"]
+        naglowki = ["id", "title", "city", "type_of_work", "experience", "employment_type", "operating_mode", "description", "url"]
         writer = csv.DictWriter(plik, fieldnames=naglowki)
         writer.writeheader()
         writer.writerows(data)

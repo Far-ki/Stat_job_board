@@ -1,10 +1,9 @@
 {
-    "filters": {
-      "city": ["Warszawa"],           
-      "experience": ["Mid"],         
-      "type_of_work": ["Full-time"], 
-      "employment_type": ["Permanent"], 
-      "keywords": ["C++"]      
-    }
+  "filters": {
+      "city": ["Kołbaskowo", "Warszawa"],
+      "experience": ["Mid", "Junior"],
+      "type_of_work": "Full-time",
+      "employment_type": ["Permanent", "B2B"],
+      "keywords": ["IT", "Windows", "Linux"]
   }
-  
+}
