@@ -3,8 +3,7 @@ import json
 import spacy
 from rapidfuzz import fuzz
 
-
-nlp = spacy.load('pl_core_news_sm') 
+nlp = spacy.load('pl_core_news_sm')
 
 with open('config.json', 'r', encoding='utf-8') as file:
     config = json.load(file)
@@ -12,7 +11,6 @@ with open('config.json', 'r', encoding='utf-8') as file:
 data = pd.read_csv('oferty_pracy.csv')
 
 filters = config['filters']
-
 
 if 'city' in filters and filters['city']:
     if isinstance(filters['city'], list):
@@ -38,17 +36,15 @@ if 'employment_type' in filters and filters['employment_type']:
     else:
         data = data[data['employment_type'] == filters['employment_type']]
 
-
 if 'keywords' in filters and filters['keywords']:
     keywords = filters['keywords']
 
 
-    lemmatized_keywords = []
-    for keyword in keywords:
+    lemmatized_keywords = {}
+    for keyword, priority in keywords.items():
         doc = nlp(keyword.lower())
         lemmatized_keyword = ' '.join([token.lemma_ for token in doc])
-        lemmatized_keywords.append(lemmatized_keyword)
-
+        lemmatized_keywords[lemmatized_keyword] = priority
 
     def lemmatize_description(text):
         doc = nlp(str(text).lower())
@@ -56,16 +52,15 @@ if 'keywords' in filters and filters['keywords']:
 
     data['lemmatized_description'] = data['description'].apply(lemmatize_description)
 
+    def fuzzy_match_with_priority(description):
+        max_score = 0
+        for keyword, priority in lemmatized_keywords.items():
+            score = fuzz.partial_ratio(keyword, description) * (priority / 100)
+            if score > max_score:
+                max_score = score
+        return max_score >= 80  
 
-    def fuzzy_match(description):
-        for keyword in lemmatized_keywords:
-            score = fuzz.partial_ratio(keyword, description)
-            if score >= 80: 
-                return True
-        return False
-
-    data = data[data['lemmatized_description'].apply(fuzzy_match)]
-
+    data = data[data['lemmatized_description'].apply(fuzzy_match_with_priority)]
 
 data.to_csv('oferty_filtered.csv', index=False, encoding='utf-8')
 print("Zapisano przefiltrowane dane do pliku 'oferty_filtered.csv'.")

@@ -1,9 +1,13 @@
 {
   "filters": {
-      "city": ["Kołbaskowo", "Warszawa"],
-      "experience": ["Mid", "Junior"],
-      "type_of_work": "Full-time",
-      "employment_type": ["Permanent", "B2B"],
-      "keywords": ["IT", "Windows", "Linux"]
+    "city": ["Kołbaskowo", "Warszawa"],
+    "experience": ["Mid", "Junior"],
+    "type_of_work": "Full-time",
+    "employment_type": ["Permanent", "B2B"],
+    "keywords": {
+      "IT": 90,
+      "Windows": 80,
+      "Linux": 85
+    }
   }
 }
