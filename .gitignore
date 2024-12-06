@@ -15,6 +15,7 @@ Thumbs.db
 # Scrapy files
 .scrapy/
 .oferty_pracy.csv
+.oferty_filtered.csv
 
 # Log files
 *.log
